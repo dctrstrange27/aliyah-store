@@ -1,5 +1,6 @@
 import NextAuth from "next-auth";
 import GoogleProvider from "next-auth/providers/google";
+
 import { PrismaAdapter } from "@auth/prisma-adapter";
 import Credentials from "next-auth/providers/credentials";
 import { PrismaClient } from "@prisma/client";
@@ -11,6 +12,7 @@ export const authOptions = {
     strategy:"jwt"
   },
   providers: [
+ 
     GoogleProvider({
       clientId: process.env.GOOGLE_ID as string,
       clientSecret: process.env.GOOGLE_SECRET as string,
@@ -39,9 +41,10 @@ export const authOptions = {
           },
         });
         console.log("userExist", userExist);
-        if (!userExist && password !== "1234") {
+        if (!userExist || password !== "1234") {
             return null
         }
+        console.log(userExist)
         return userExist
       },
     }),
@@ -49,6 +52,5 @@ export const authOptions = {
   pages:{
     signIn:'/auth/signin'
   }
- 
 };
 export default NextAuth(authOptions);
